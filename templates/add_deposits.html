@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Deposits Entry</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #ffffff; padding: 40px; margin: 0; }
+    h1 { text-align: center; margin-bottom: 24px; font-size: 2em; color: #333; }
+    form {
+      max-width: 720px; margin: auto; background: #f9f9f9; padding: 24px; border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    label { display: block; margin-top: 16px; font-weight: 600; font-size: 14px; color: #222; }
+    input[type="text"], input[type="number"], textarea, select {
+      width: 100%; padding: 10px; margin-top: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; background: #fff;
+    }
+    textarea { resize: vertical; }
+    button {
+      margin-top: 22px; width: 100%; padding: 14px; background-color: #007bff;
+      color: white; border: none; border-radius: 6px; font-size: 17px; cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    .back-link { text-align: center; margin-top: 16px; }
+    .back-link a { text-decoration: none; color: #007bff; font-weight: bold; }
+    .back-link a:hover { text-decoration: underline; }
+    .message { text-align: center; color: green; margin-top: 12px; font-weight: bold; }
+    .hint { font-size: 12px; color: #666; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <h1>Add / Update Deposit (Part)</h1>
+
+  <form method="POST" action="{{ url_for('add_deposits') }}">
+    <input type="hidden" name="stage" value="{{ stage }}">
+    <label>Part ID</label>
+    <input type="number" name="part_id" value="{{ prefill_part_id or '' }}" required>
+  
+    <label>File Name</label>
+    <input type="text" name="file_name" required>
+  
+    <label>Operator</label>
+    <select name="operator_id" required>
+      <option value="" disabled selected>Select operator…</option>
+      {% for oid, oname in operator_options %}
+        <option value="{{ oid }}">{{ oid }} - {{ oname }}</option>
+      {% endfor %}
+    </select>
+  
+    <label>Material</label>
+    <select name="material_id" required>
+      <option value="" disabled selected>Select material…</option>
+      {% for mid, mname in material_options %}
+        <option value="{{ mid }}">{{ mid }} - {{ mname }}</option>
+      {% endfor %}
+    </select>
+  
+    <label>Machine</label>
+    <select name="machine_id" required>
+      <option value="" disabled selected>Select machine…</option>
+      {% for mcid, mcname in machine_options %}
+        <option value="{{ mcid }}">{{ mcid }} - {{ mcname }}</option>
+      {% endfor %}
+    </select>
+  
+    <label>Notes</label>
+    <textarea name="notes" rows="4" placeholder="Notes (optional)"></textarea>
+  
+    <button type="submit">Save Deposit</button>
+  </form>
+
+  <div class="back-link">
+    <a href="{{ url_for('enter_details', stage=stage) }}">← Back</a>
+  </div>
+
+</body>
+</html>

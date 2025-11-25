@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LAMP Data Uploader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
+
+    /* Top nav bar */
+    .top-nav {
+      background-color: #f1f1f1;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-nav a {
+      font-size: 16px;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .top-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .logo-title {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .logo-title img {
+      height: 300px;
+      margin-bottom: 20px;
+    }
+
+    .logo-title h1 {
+      font-size: 3em;
+      color: #333;
+      margin-bottom: 40px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    button {
+      padding: 20px 40px;
+      font-size: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top-right navigation tab -->
+  <div class="top-nav">
+    <a href="{{ url_for('machine') }}">Add Machine</a>
+    <a href="{{ url_for('operator') }}">Add User</a>
+    <a href="{{ url_for('add_material') }}">Add Material</a>
+    <a href="{{ url_for('add_deposits') }}">Add Deposits</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+
+  <div class="logo-title">
+    <img src="{{ url_for('static', filename='images/lamp_logo.png') }}" alt="LAMP Data Uploader">
+  </div>
+
+  <div class="button-container">
+    <form method="POST" action="{{ url_for('handle_stage_selection') }}">
+      <button name="stage" value="design_stage">Design Stage</button>
+      <button name="stage" value="in_process">In Process</button>
+      <button name="stage" value="post_process">Post Process</button>
+    </form>
+  </div>
+
+</body>
+</html>

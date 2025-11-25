@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Specific Operator Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .no-data {
+      text-align: center;
+      color: #888;
+      margin-top: 50px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>IR Camera Data by Operator</h1>
+
+  <!-- Operator ID input form -->
+  <form method="GET" action="{{ url_for('operator_data') }}">
+    <input type="number" name="operator_id" placeholder="Enter Operator ID" required>
+    <button type="submit">Get Data</button>
+  </form>
+
+  {% if data and data.rows %}
+    <table>
+      <thead>
+        <tr>
+          {% for col in data.columns %}
+            <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data.rows %}
+          <tr>
+            {% for cell in row %}
+              <td>{{ cell }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif data %}
+    <div class="no-data">No data found for this operator.</div>
+  {% endif %}
+
+  <div style="text-align: center; margin-top: 30px;">
+    <a class="back-link" href="{{ url_for('home') }}">← Back to Home Page</a>
+  </div>
+
+</body>
+</html>

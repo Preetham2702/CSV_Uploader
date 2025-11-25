@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pico Log Preview - {{ filename }}</title>
+  <style>
+    /* ===== CSS (top) ===== */
+    :root {
+      --border:#ddd;
+      --bg:#fff;
+      --muted:#333;
+      --btn-bg:#f0f0f0;
+    }
+    body { font-family: Arial, sans-serif; padding: 20px; margin:0; }
+    h2 { margin: 0 0 12px; }
+    .btn, button.btn, a.btn {
+      display:inline-block; margin-bottom:12px;
+      text-decoration:none; background:var(--btn-bg); padding:8px 12px; border-radius:6px;
+      color:#000; border:1px solid var(--border); cursor:pointer;
+    }
+    button.btn[disabled] { opacity:.5; cursor:not-allowed; }
+    .controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:8px 0 16px; }
+    .pager { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .meta { margin-right: 8px; color:var(--muted); }
+    .table-wrapper { max-height: 70vh; overflow-y: auto; border: 1px solid var(--border); background: var(--bg); }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border-bottom:1px solid #eee; padding:8px 10px; text-align:left; }
+    th { position:sticky; top:0; background:#f7f7f7; z-index:1; }
+    form.inline { display:inline; margin:0; padding:0; }
+    .spacer { flex:1 1 auto; }
+  </style>
+</head>
+<body>
+  <!-- ===== HTML (bottom) ===== -->
+
+  <div class="controls">
+    <a class="btn" href="{{ url_for('index') }}">&larr; Back</a>
+
+    <!-- Upload to DB (disabled until part_id is known) -->
+    <form class="inline" method="POST" action="{{ url_for('pico_log', filename=filename) }}">
+      <input type="hidden" name="filename" value="{{ filename }}">
+      <input type="hidden" name="stage" value="{{ stage|default(request.args.get('stage','pico_log')) }}">
+      <input type="hidden" name="part_id" value="{{ (part_id if part_id is defined and part_id) or session.get('part_id') }}">
+      <button type="submit" class="btn"
+        {% if not ((part_id is defined and part_id) or session.get('part_id')) %}
+          disabled title="Pick Part ID first (via Enter Details)"
+        {% endif %}>
+        Upload to Database
+      </button>
+    </form>
+
+    <div class="spacer"></div>
+
+    <!-- Pagination + per-page controls -->
+    <div class="meta">Page {{ page }} / {{ total_pages }} • {{ total_rows }} rows total</div>
+
+    <div class="pager">
+      {% if page > 1 %}
+        <a class="btn" href="{{ url_for('preview_pico_log', filename=filename, page=1, per_page=per_page) }}">&laquo; First</a>
+        <a class="btn" href="{{ url_for('preview_pico_log', filename=filename, page=page-1, per_page=per_page) }}">&lsaquo; Prev</a>
+      {% endif %}
+      {% if page < total_pages %}
+        <a class="btn" href="{{ url_for('preview_pico_log', filename=filename, page=page+1, per_page=per_page) }}">Next &rsaquo;</a>
+        <a class="btn" href="{{ url_for('preview_pico_log', filename=filename, page=total_pages, per_page=per_page) }}">Last &raquo;</a>
+      {% endif %}
+    </div>
+
+    <form class="inline" method="get" action="{{ url_for('preview_pico_log', filename=filename) }}">
+      <input type="hidden" name="page" value="1">
+      <label>Rows per page:
+        <input type="number" name="per_page" value="{{ per_page }}" min="50" max="5000" step="50">
+      </label>
+      <button type="submit" class="btn">Apply</button>
+    </form>
+  </div>
+
+  <h2>{{ filename }}</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          {% for h in headers %}
+            <th>{{ h }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          <tr>
+            {% for c in r %}
+              <td>{{ c }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
